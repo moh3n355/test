@@ -32,15 +32,154 @@ body {
 
 /* Header Styles */
 header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
     padding: 20px 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    
+}
+
+.user-panel {
+        position: fixed;
+        top: 21px;
+        left: 8mm;
+        z-index: 999999;
+}
+
+.user-icon {
+    color: rgb(233, 181, 252);
+    font-size: 40px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 30px;
+    background: var(--primary-color);
+    backdrop-filter: blur(5px);
+    cursor: pointer;
+}
+
+.user-icon span {
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+}
+
+.user-icon:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 280px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    margin-left: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    z-index: 999999; /* Changed to highest possible value */
+}
+
+.user-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.user-info {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.user-info img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info h4 {
+    color: var(--text-color);
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.user-info p {
+    color: #666;
+    font-size: 14px;
+}
+
+.dropdown-menu {
+    list-style: none;
+    padding: 10px 0;
+}
+
+.dropdown-menu li {
+    padding: 0;
+}
+
+.dropdown-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.dropdown-menu li a:hover {
+    background: var(--light-color);
+    color: var(--primary-color);
+}
+
+.dropdown-menu li a i {
+    width: 20px;
+    text-align: center;
+}
+
+.dropdown-menu .divider {
+    height: 1px;
+    background: #eee;
+    margin: 10px 0;
+}
+
+.dropdown-menu .logout {
+    color: #dc3545;
+}
+
+.dropdown-menu .logout:hover {
+    background: #fff5f5;
+    color: #dc3545;
+}
+
+/* Arrow for the dropdown */
+.user-dropdown::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -8px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .logo {
@@ -66,12 +205,14 @@ header {
 }
 
 .search-box {
-    display: flex;
+    display: relative;
     align-items: center;
     background-color: white;
     border-radius: 30px;
     padding: 8px 15px;
-    width: 300px;
+    width: 500px;
+    top: 21px;
+    margin-right: 8cm;
 }
 
 .search-box input {
@@ -137,7 +278,7 @@ nav {
 /* Hero Section */
 .hero {
     height: 400px;
-    background-image: url('https://decoralin.com/picfiles/Proj/2022/1/1686515867e505-c135-42b5-a3e3-aa_L.jpg');
+    background-image: url('https://img.freepik.com/free-photo/leaves-made-out-paper-pink-shades_23-2148301106.jpg?ga=GA1.1.813984368.1740389344&semt=ais_hybrid&w=740');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -155,8 +296,9 @@ nav {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(164, 117, 249, 0.4);
 }
+/* زیز */
 
 .hero-content {
     position: relative;
@@ -266,7 +408,7 @@ nav {
 
 /* Section */
 .discounts {
-    background: linear-gradient(to right, #a475f9, #f7d9e3);
+    background: linear-gradient(to right, #f7d9e3,  #a475f9);
     padding: 50px 0;
     margin: 50px 0;
 }
@@ -404,7 +546,7 @@ nav {
     width: 100%;
     overflow-x: auto;
     padding: 40px 0;
-    background: linear-gradient(to right, #a475f9, #f7d9e3);
+    background: linear-gradient(to right, #f7d9e3, #a475f9);
 }
 
 .testimonials .container {
@@ -487,23 +629,21 @@ nav {
 
 /* About Section */
 .about {
+    padding: 80px 0;
     text-align: center;
-    padding: 50px 0;
-    margin-bottom: 50px;
 }
 
 .about h2 {
-    font-size: 32px;
     color: var(--primary-color);
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-size: 32px;
 }
 
 .about p {
     max-width: 800px;
-    margin: 0 auto 30px;
-    font-size: 16px;
+    margin: 0 auto 20px;
+    color: var(--text-color);
     line-height: 1.8;
-    color: #555;
 }
 
 /* Footer */
@@ -539,6 +679,9 @@ footer {
 
 .footer-column ul li {
     margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 8px;
 }
 
 .footer-column ul li a {
@@ -551,17 +694,32 @@ footer {
     color: var(--light-color);
 }
 
+.phone-link {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.phone-link:hover {
+    color: var(--light-color);
+}
+
+.social-links-container {
+    margin-top: 15px;
+}
+
 .social-links {
     display: flex;
     gap: 15px;
+    justify-content: flex-start;
 }
 
 .social-links a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     color: white;
@@ -635,5 +793,50 @@ footer {
         width: 100%;
         max-width: 300px;
     }
+}
+
+/* Services scrollbar */
+.services::-webkit-scrollbar {
+    height: 8px;
+}
+
+.services::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.services::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+/* Top Salons scrollbar */
+.salon-slider::-webkit-scrollbar {
+    height: 8px;
+}
+
+.salon-slider::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.salon-slider::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+/* Articles scrollbar */
+.salon-slider::-webkit-scrollbar {
+    height: 8px;
+}
+
+.salon-slider::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.salon-slider::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
 }
     

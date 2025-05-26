@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آموزش تعاملی مقدمات SFML</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Tahoma', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .code-block {
+            position: relative;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4A5568;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .copy-btn:hover {
+            background-color: #2D3748;
+        }
+
+        .code-block pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .code-block pre::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .code-block pre::-webkit-scrollbar-track {
+            background: #2D3748;
+        }
+
+        .code-block pre::-webkit-scrollbar-thumb {
+            background-color: #718096;
+            border-radius: 4px;
+            border: 2px solid #2D3748;
+        }
+
+        .output-simulation {
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            background-color: #000000;
+            border: 2px solid #4A5568;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.875rem;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.375rem;
+        }
+
+        .output-simulation-content {
+        }
+
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(100%);
+            }
+
+            #sidebar.open {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <div class="md:hidden bg-orange-600 text-white p-4 flex justify-between items-center fixed top-0 right-0 left-0 z-20">
+            <h1 class="text-xl font-bold">آموزش SFML</h1>
+            <button id="hamburger-btn" class="text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <aside id="sidebar" class="bg-slate-800 text-slate-200 w-full md:w-72 lg:w-80 min-h-screen p-6 space-y-6 fixed top-0 right-0 h-full overflow-y-auto z-10 md:relative md:translate-x-0 pt-16 md:pt-6">
+            <div class="text-center mb-8 hidden md:block">
+                <h1 class="text-3xl font-bold text-orange-400">آموزش SFML</h1>
+                <p class="text-sm text-slate-400">راهنمای جامع و تعاملی</p>
+            </div>
+            <nav class="space-y-3">
+                <div>
+                    <button data-target="intro" class="nav-btn w-full text-right text-lg p-3 rounded-lg hover:bg-slate-700 hover:text-orange-400 transition-colors duration-200">
+                        <i class="fas fa-info-circle ml-2"></i>مقدمه: SFML چیست؟
+                    </button>
+                </div>
+                <div>
+                    <button data-target="installation" class="nav-btn w-full text-right text-lg p-3 rounded-lg hover:bg-slate-700 hover:text-orange-400 transition-colors duration-200">
+                        <i class="fas fa-download ml-2"></i>نصب و راه‌اندازی
+                    </button>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-orange-500 mb-2 mt-4 border-b border-slate-700 pb-1">توابع کلیدی SFML</h3>
+                    <ul class="space-y-2 pr-3">
+                        <li><button data-target="basic-structures" class="nav-btn w-full text-right p-2 rounded hover:bg-slate-700 hover:text-orange-400 transition-colors duration-200"><i class="fas fa-cubes ml-2"></i>ساختارهای پایه‌ای</button></li>
+                        <li><button data-target="graphical-shapes" class="nav-btn w-full text-right p-2 rounded hover:bg-slate-700 hover:text-orange-400 transition-colors duration-200"><i class="fas fa-shapes ml-2"></i>اشکال گرافیکی</button></li>
+                        <li><button data-target="event-management" class="nav-btn w-full text-right p-2 rounded hover:bg-slate-700 hover:text-orange-400 transition-colors duration-200"><i class="fas fa-mouse-pointer ml-2"></i>مدیریت رخدادها</button></li>
+                        <li><button data-target="time-animation" class="nav-btn w-full text-right p-2 rounded hover:bg-slate-700 hover:text-orange-400 transition-colors duration-200"><i class="fas fa-clock ml-2"></i>زمان و انیمیشن</button></li>
+                        <li><button data-target="text-font" class="nav-btn w-full text-right p-2 rounded hover:bg-slate-700 hover:text-orange-400 transition-colors duration-200"><i class="fas fa-font ml-2"></i>متن و فونت</button></li>
+                        <li><button data-target="user-input" class="nav-btn w-full text-right p-2 rounded hover:bg-slate-700 hover:text-orange-400 transition-colors duration-200"><i class="fas fa-keyboard ml-2"></i>ورودی‌های کاربر</button></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="mt-auto pt-6 text-center text-xs text-slate-500">
+                <p>ایجاد شده توسط محسن سعیدی</p>
+                <p>استاد: ایمان اشکاوند</p>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10 bg-stone-100 text-stone-800 min-h-screen overflow-y-auto pt-20 md:pt-10">
+            <div id="content-area">
+                <section id="intro" class="content-section active space-y-6">
+                    <h2 class="text-4xl font-bold text-orange-600 border-b-2 border-orange-500 pb-2">مقدمه: SFML چیست؟</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md text-lg leading-relaxed">
+                        <p>SFML مخفف <strong class="text-orange-700">Simple and Fast Multimedia Library</strong> است. این یک کتابخانه رایگان و متن‌باز برای برنامه‌نویسی چندرسانه‌ای (multimedia) در زبان C++ است. SFML به طور گسترده برای ساخت بازی‌های دوبعدی، اپلیکیشن‌های گرافیکی، و برنامه‌هایی که با صدا، تصویر، و ورودی‌های کاربر (مانند کیبورد و موس) سر و کار دارند، استفاده می‌شود.</p>
+                        <p class="mt-4">ویژگی‌های کلیدی SFML عبارتند از:</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 pr-5">
+                            <li><strong class="text-orange-600">سادگی:</strong> یادگیری و استفاده از SFML آسان است، به خصوص برای مبتدیان.</li>
+                            <li><strong class="text-orange-600">سرعت:</strong> SFML با استفاده از شتاب‌دهنده سخت‌افزاری (Hardware Acceleration) عملکرد بالایی ارائه می‌دهد.</li>
+                            <li><strong class="text-orange-600">چندسکویی (Cross-platform):</strong> برنامه‌های نوشته شده با SFML می‌توانند بر روی سیستم‌عامل‌های مختلفی مانند ویندوز، لینوکس، و macOS اجرا شوند.</li>
+                            <li><strong class="text-orange-600">شیءگرایی:</strong> SFML با یک API شیءگرا طراحی شده است که کدنویسی را سازمان‌یافته‌تر می‌کند.</li>
+                            <li><strong class="text-orange-600">ماژولار بودن:</strong> SFML از چندین ماژول تشکیل شده است (System, Window, Graphics, Audio, Network) که می‌توانید فقط ماژول‌های مورد نیاز خود را استفاده کنید.</li>
+                        </ul>
+                        <p class="mt-4">SFML یک انتخاب عالی برای شروع توسعه بازی و گرافیک در C++ است و جامعه کاربری فعالی دارد که منابع آموزشی و پشتیبانی خوبی ارائه می‌دهند.</p>
+                    </div>
+                </section>
+
+                <section id="installation" class="content-section space-y-6">
+                    <h2 class="text-4xl font-bold text-orange-600 border-b-2 border-orange-500 pb-2">نصب و راه‌اندازی SFML</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-md text-lg leading-relaxed">
+                        <p>برای استفاده از SFML در پروژه‌های C++ خود، ابتدا باید آن را دانلود و در محیط توسعه خود (مانند Visual Studio) پیکربندی کنید. در ادامه مراحل کلی نصب و راه‌اندازی SFML (نسخه 2.5.1 برای مثال) با MinGW (برای کامپایلر GCC) و Visual Studio آمده است:</p>
+
+                        <h3 class="text-2xl font-semibold text-orange-700 mt-6 mb-3">مرحله ۱: دانلود فایل‌های مورد نیاز</h3>
+                        <ul class="list-decimal list-inside space-y-2 pr-5">
+                            <li>
+                                <strong>دانلود کتابخانه SFML:</strong>
+                                <ul class="list-disc list-inside pr-5 mt-1">
+                                    <li>به وب‌سایت رسمی SFML به آدرس <a href="https://www.sfml-dev.org/download.php" target="_blank" class="text-blue-600 hover:underline">sfml-dev.org/download.php</a> بروید.</li>
+                                    <li>نسخه مناسب SFML را برای کامپایلر و معماری سیستم خود دانلود کنید (مثلاً برای Visual Studio 2017 64-bit یا GCC 7.3.0 MinGW (DW2) 32-bit).</li>
+                                    <li>فایل دانلود شده (معمولاً یک فایل فشرده .zip یا .tar.gz) را استخراج کنید. پیشنهاد می‌شود محتویات آن را در یک مسیر مشخص و بدون فاصله در نام، مانند <code>C:\SFML-2.5.1</code> کپی کنید.</li>
+                                </ul>
+                            </li>
+                            <li class="mt-2">
+                                <strong>دانلود کامپایلر (در صورت نیاز):</strong>
+                                <ul class="list-disc list-inside pr-5 mt-1">
+                                    <li>اگر از Visual Studio استفاده می‌کنید، کامپایلر C++ به همراه آن نصب شده است.</li>
+                                    <li>اگر از کامپایلرهای مبتنی بر GCC مانند MinGW استفاده می‌کنید، مطمئن شوید که نسخه سازگار با SFML دانلود شده را نصب کرده‌اید (مثلاً MinGW-w64 با GCC 7.3.0).</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <h3 class="text-2xl font-semibold text-orange-700 mt-6 mb-3">مرحله ۲: ساخت پروژه در محیط توسعه</h3>
+                        <p>یک پروژه جدید C++ در محیط توسعه خود (IDE) ایجاد کنید. برای مثال، در Visual Studio یک "Empty Project" بسازید.</p>
+
+                        <h3 class="text-2xl font-semibold text-orange-700 mt-6 mb-3">مرحله ۳: تنظیمات پروژه (مثال برای Visual Studio)</h3>
+                        <ol class="list-decimal list-inside space-y-2 pr-5">
+                            <li>یک فایل <code>main.cpp</code> به پروژه خود اضافه کنید.</li>
+                            <li>روی نام پروژه در Solution Explorer راست کلیک کرده و `Properties` را انتخاب کنید.</li>
+                            <li>
+                                <strong>تنظیمات کلی:</strong>
+                                <ul class="list-disc list-inside pr-5 mt-1">
+                                    <li>`Configuration`: `All Configurations` (یا `Debug` و `Release` را جداگانه تنظیم کنید).</li>
+                                    <li>`Platform`: `x64` یا `x86` (بسته به نسخه SFML دانلود شده).</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>مسیرهای Include:</strong>
+                                <ul class="list-disc list-inside pr-5 mt-1">
+                                    <li>به `Configuration Properties > C/C++ > General > Additional Include Directories` بروید.</li>
+                                    <li>مسیر پوشه `include` کتابخانه SFML را اضافه کنید (مثلاً `C:\SFML-2.5.1\include`).</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>مسیرهای Library:</strong>
+                                <ul class="list-disc list-inside pr-5 mt-1">
+                                    <li>به `Configuration Properties > Linker > General > Additional Library Directories` بروید.</li>
+                                    <li>مسیر پوشه `lib` کتابخانه SFML را اضافه کنید (مثلاً `C:\SFML-2.5.1\lib`).</li>
+                                </ul>
+                            </li>
+                            <li>
+                                <strong>وابستگی‌های Linker:</strong>
+                                <ul class="list-disc list-inside pr-5 mt-1">
+                                    <li>به `Configuration Properties > Linker > Input > Additional Dependencies` بروید.</li>
+                                    <li>
+                                        کتابخانه‌های SFML مورد نیاز را اضافه کنید.  Debug:
+                                        <code>sfml-graphics.lib
+                                            sfml-window.lib
+                                            sfml-system.lib
+                                            </code>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <h3 class="text-2xl font-semibold text-orange-700 mt-6 mb-3">مرحله ۴: کپی کردن فایل‌های DLL</h3>
+                        <p>فایل‌های DLL مورد نیاز SFML (که در پوشه `bin` کتابخانه SFML قرار دارند، مثلاً `C:\SFML-2.5.1\bin`) را به پوشه خروجی پروژه خود کپی کنید (معمولاً پوشه `Debug` یا `Release` در کنار فایل اجرایی برنامه).</p>
+
+                        <h3 class="text-2xl font-semibold text-orange-700 mt-6 mb-3">مرحله ۵: تست نصب</h3>
+                        <p>یک کد ساده SFML (مانند مثال ایجاد پنجره) را در `main.cpp` بنویسید، پروژه را Build کرده و اجرا کنید. اگر پنجره SFML بدون خطا نمایش داده شد، نصب با موفقیت انجام شده است.</p>
+                        <p class="mt-4"><strong>نکته مهم:</strong> مراحل دقیق ممکن است بسته به نسخه SFML، کامپایلر، و IDE شما کمی متفاوت باشد. همیشه به مستندات رسمی SFML برای راهنمایی دقیق‌تر مراجعه کنید.</p>
+                    </div>
+                </section>
+
+                <section id="basic-structures" class="content-section space-y-8">
+                    <h2 class="text-4xl font-bold text-orange-600 border-b-2 border-orange-500 pb-2">ساختارهای پایه‌ای</h2>
+                    <p class="text-lg">این بخش به معرفی کلاس‌ها و توابع اساسی SFML می‌پردازد که برای ایجاد پنجره، مدیریت آن و نمایش محتوا استفاده می‌شوند.</p>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-2xl font-semibold text-orange-700 mb-3">تابع: <code>sf::RenderWindow</code></h4>
+                        <p><strong>کاربرد:</strong> ایجاد و مدیریت پنجره‌ی گرافیکی.</p>
+                        <p class="mt-2"><strong>توضیح:</strong> این کلاس پنجره‌ای باز می‌کند که می‌توان در آن اشیاء گرافیکی رسم کرد. این پنجره نقطه شروع هر برنامه گرافیکی SFML است.</p>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">ساختار تابع:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>sf::RenderWindow window(sf::VideoMode(width, height), "Title");</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+
+int main()
+{
+    // یک پنجره با ابعاد 800x600 پیکسل و عنوان "SFML Window Example" ایجاد می‌کند.
+    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Window Example");
+
+    // حلقه اصلی برنامه که تا زمانی که پنجره باز است ادامه دارد.
+    while (window.isOpen())
+    {
+        sf::Event event; // یک شیء رویداد برای دریافت ورودی‌ها
+        // رویدادها را از صف رویدادها دریافت می‌کند.
+        while (window.pollEvent(event))
+        {
+            // اگر رویداد از نوع بسته شدن پنجره باشد، پنجره را می‌بندد.
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        // پنجره را با رنگ مشکی پاک می‌کند.
+        window.clear(sf::Color::Black);
+
+        // در اینجا می‌توان اشیاء گرافیکی را رسم کرد.
+
+        // محتوای پنجره را نمایش می‌دهد.
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده:</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با پس‌زمینه مشکی، با ابعاد ۸۰۰ در ۶۰۰ پیکسل و با عنوان "SFML Window Example" در بالای پنجره نمایش داده می‌شود. این پنجره تا زمانی که کاربر آن را ببندد (مثلاً با کلیک روی دکمه X) باز باقی می‌ماند.</p>
+                            <div class="output-simulation">
+                                <div style="width:150px; height:100px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">SFML Window Example</div>
+                                    <div style="flex-grow:1; background-color:black;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-2xl font-semibold text-orange-700 mb-3">تابع: <code>sf::VideoMode</code></h4>
+                        <p><strong>کاربرد:</strong> مشخص کردن اندازه‌ی پنجره.</p>
+                        <p class="mt-2"><strong>توضیح:</strong> ابعاد پنجره‌ی برنامه (عرض و ارتفاع به پیکسل) را تعیین می‌کند. همچنین می‌تواند عمق بیت (bits per pixel) را نیز مشخص کند که معمولاً ۳۲ است.</p>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">ساختار تابع:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>sf::VideoMode(unsigned int modeWidth, unsigned int modeHeight, unsigned int modeBitsPerPixel = 32);</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد (استفاده در <code>sf::RenderWindow</code>):</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+
+int main()
+{
+    // ایجاد یک پنجره با عرض 640 و ارتفاع 480 پیکسل
+    sf::RenderWindow window(sf::VideoMode(640, 480), "VideoMode Example");
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear(sf::Color::Cyan); // پاک کردن با رنگ فیروزه‌ای
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده:</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با پس‌زمینه فیروزه‌ای (Cyan)، با ابعاد ۶۴۰ در ۴۸۰ پیکسل و با عنوان "VideoMode Example" نمایش داده می‌شود.</p>
+                            <div class="output-simulation" style="background-color: cyan;">
+                                <div style="width:120px; height:90px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">VideoMode Example</div>
+                                    <div style="flex-grow:1; background-color:cyan;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-2xl font-semibold text-orange-700 mb-3">تابع: <code>window.clear()</code></h4>
+                        <p><strong>کاربرد:</strong> پاک کردن پنجره قبل از رسم فریم جدید.</p>
+                        <p class="mt-2"><strong>توضیح:</strong> این تابع کل محتوای پنجره را با یک رنگ مشخص (پیش‌فرض مشکی) پاک می‌کند. این کار برای هر فریم انیمیشن ضروری است تا از باقی ماندن رد اشیاء از فریم قبلی جلوگیری شود.</p>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">ساختار تابع:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>void sf::RenderTarget::clear(const sf::Color& color = sf::Color(0, 0, 0, 255));
+// مثال استفاده:
+window.clear(sf::Color::Blue); // پاک کردن با رنگ آبی
+window.clear(); // پاک کردن با رنگ مشکی (پیش‌فرض)</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(400, 300), "Clear Example");
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear(sf::Color::Blue); // پاک کردن پنجره با رنگ آبی
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده:</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با ابعاد ۴۰۰ در ۳۰۰ پیکسل و عنوان "Clear Example" نمایش داده می‌شود که تماماً به رنگ آبی است.</p>
+                            <div class="output-simulation" style="background-color: blue;">
+                                <div style="width:100px; height:75px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">Clear Example</div>
+                                    <div style="flex-grow:1; background-color:blue;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-2xl font-semibold text-orange-700 mb-3">تابع: <code>window.draw()</code></h4>
+                        <p><strong>کاربرد:</strong> رسم یک شیء قابل رسم (Drawable) روی پنجره.</p>
+                        <p class="mt-2"><strong>توضیح:</strong> این تابع یک شیء گرافیکی (مانند شکل، متن، یا اسپریت) را به بافر پشتی (back buffer) پنجره اضافه می‌کند. این اشیاء تا زمانی که <code>window.display()</code> فراخوانی نشود، روی صفحه نمایش داده نمی‌شوند.</p>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">ساختار تابع:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>void sf::RenderTarget::draw(const sf::Drawable& drawable, const sf::RenderStates& states = sf::RenderStates::Default);
+// مثال استفاده:
+sf::CircleShape circle(50.f);
+window.draw(circle);</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(400, 300), "Draw Example");
+    sf::CircleShape circle(50.f); // دایره با شعاع 50
+    circle.setFillColor(sf::Color::Green); // رنگ سبز
+    circle.setPosition(100.f, 100.f); // موقعیت دایره
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear(); // پاک کردن پنجره (با رنگ مشکی پیش‌فرض)
+        window.draw(circle); // رسم دایره
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده:</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با پس‌زمینه مشکی و عنوان "Draw Example" نمایش داده می‌شود که در آن یک دایره سبز رنگ با شعاع ۵۰ پیکسل در موقعیت (۱۰۰, ۱۰۰) رسم شده است.</p>
+                            <div class="output-simulation">
+                                <div style="width:100px; height:75px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px; position:relative;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">Draw Example</div>
+                                    <div style="flex-grow:1; background-color:black; position:relative;">
+                                        <div style="width:25px; height:25px; background-color:green; border-radius:50%; position:absolute; top:25px; left:25px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-2xl font-semibold text-orange-700 mb-3">تابع: <code>window.display()</code></h4>
+                        <p><strong>کاربرد:</strong> نمایش محتوای رسم شده روی صفحه.</p>
+                        <p class="mt-2"><strong>توضیح:</strong> این تابع محتوای بافر پشتی (که با <code>window.draw()</code> پر شده است) را به بافر جلویی (front buffer) منتقل می‌کند و باعث می‌شود تغییرات روی صفحه نمایش داده شوند. این تابع باید در انتهای هر فریم از حلقه اصلی برنامه فراخوانی شود.</p>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">ساختار تابع:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>void sf::Window::display();</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد:</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200"> (در مثال تابع <code>window.draw()</code> و سایر مثال‌های ایجاد پنجره، این تابع برای نمایش نهایی استفاده شده است.)</p>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده:</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">پس از فراخوانی <code>window.clear()</code> و یک یا چند <code>window.draw()</code>، فراخوانی <code>window.display()</code> باعث می‌شود که تمام اشیاء رسم شده در آن فریم، روی پنجره قابل مشاهده باشند. بدون این تابع، پنجره خالی یا بدون تغییر باقی می‌ماند.</p>
+                        </div>
+                    </article>
+                </section>
+
+                <section id="graphical-shapes" class="content-section space-y-8">
+                    <h2 class="text-4xl font-bold text-orange-600 border-b-2 border-orange-500 pb-2">اشکال گرافیکی</h2>
+                    <p class="text-lg">SFML کلاس‌های مختلفی برای رسم اشکال هندسی ساده مانند دایره، مستطیل، و چندضلعی‌های دلخواه ارائه می‌دهد. این بخش به معرفی این کلاس‌ها و توابع مرتبط با آن‌ها می‌پردازد.</p>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-2xl font-semibold text-orange-700 mb-3">کلاس: <code>sf::CircleShape</code></h4>
+                        <p><strong>کاربرد:</strong> رسم دایره.</p>
+                        <p class="mt-2"><strong>توضیح:</strong> این کلاس برای ایجاد و نمایش یک دایره (یا بیضی اگر مقیاس‌دهی شود) استفاده می‌شود. می‌توان شعاع، تعداد نقاط تشکیل‌دهنده (برای صافی لبه‌ها)، رنگ، موقعیت و سایر ویژگی‌های آن را تنظیم کرد.</p>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">ساختار تابع (سازنده):</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>sf::CircleShape(float radius = 0, std::size_t pointCount = 30);</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد:</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(400, 300), "CircleShape Example");
+    sf::CircleShape circle(50.f); // دایره با شعاع 50
+    circle.setFillColor(sf::Color::Red);
+    circle.setPosition(150.f, 100.f);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear();
+        window.draw(circle);
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده:</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با عنوان "CircleShape Example" نمایش داده می‌شود که در آن یک دایره قرمز رنگ با شعاع ۵۰ پیکسل در موقعیت (۱۵۰, ۱۰۰) قرار دارد.</p>
+                            <div class="output-simulation">
+                                <div style="width:100px; height:75px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px; position:relative;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">CircleShape Example</div>
+                                    <div style="flex-grow:1; background-color:black; position:relative; display:flex; align-items:center; justify-content:center;">
+                                        <div style="width:30px; height:30px; background-color:red; border-radius:50%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-2xl font-semibold text-orange-700 mb-3">کلاس: <code>sf::RectangleShape</code></h4>
+                        <p><strong>کاربرد:</strong> رسم مستطیل و مربع.</p>
+                        <p class="mt-2"><strong>توضیح:</strong> این کلاس برای ایجاد و نمایش مستطیل یا مربع استفاده می‌شود. می‌توان اندازه، رنگ، موقعیت و سایر ویژگی‌های آن را تنظیم کرد.</p>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">ساختار تابع (سازنده):</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>sf::RectangleShape(const sf::Vector2f& size = sf::Vector2f(0, 0));</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد (مستطیل):</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(400, 300), "RectangleShape Example");
+    
+    // ایجاد یک مستطیل با ابعاد 120x80
+    sf::RectangleShape rectangle(sf::Vector2f(120.f, 80.f));
+    rectangle.setFillColor(sf::Color::Blue);
+    rectangle.setPosition(100.f, 100.f);
+    rectangle.setOutlineColor(sf::Color::White);
+    rectangle.setOutlineThickness(3.f);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear();
+        window.draw(rectangle);
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد (مربع):</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(400, 300), "Square Example");
+    
+    // ایجاد یک مربع با ابعاد 100x100
+    sf::RectangleShape square(sf::Vector2f(100.f, 100.f));
+    square.setFillColor(sf::Color::Green);
+    square.setPosition(150.f, 100.f);
+    square.setRotation(45.f); // چرخش 45 درجه
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear();
+        window.draw(square);
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده (مستطیل):</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با عنوان "RectangleShape Example" نمایش داده می‌شود که در آن یک مستطیل آبی رنگ با حاشیه سفید به ضخامت ۳ پیکسل و ابعاد ۱۲۰ در ۸۰ پیکسل در موقعیت (۱۰۰, ۱۰۰) رسم شده است.</p>
+                            <div class="output-simulation">
+                                <div style="width:100px; height:75px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px; position:relative;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">RectangleShape Example</div>
+                                    <div style="flex-grow:1; background-color:black; position:relative; display:flex; align-items:center; justify-content:center;">
+                                        <div style="width:60px; height:40px; background-color:blue; border:1.5px solid white;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده (مربع):</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با عنوان "Square Example" نمایش داده می‌شود که در آن یک مربع سبز رنگ با ابعاد ۱۰۰ در ۱۰۰ پیکسل که ۴۵ درجه چرخیده است، در موقعیت (۱۵۰, ۱۰۰) رسم شده است.</p>
+                            <div class="output-simulation">
+                                <div style="width:100px; height:75px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px; position:relative;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">Square Example</div>
+                                    <div style="flex-grow:1; background-color:black; position:relative; display:flex; align-items:center; justify-content:center;">
+                                        <div style="width:35px; height:35px; background-color:green; transform:rotate(45deg);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="bg-white p-6 rounded-lg shadow-md">
+                        <h4 class="text-2xl font-semibold text-orange-700 mb-3">کلاس: <code>sf::ConvexShape</code></h4>
+                        <p><strong>کاربرد:</strong> رسم چندضلعی‌های دلخواه و مثلث.</p>
+                        <p class="mt-2"><strong>توضیح:</strong> این کلاس برای ایجاد اشکال چندضلعی با تعداد نقاط دلخواه استفاده می‌شود. برای رسم مثلث، کافی است ۳ نقطه تعریف کنید.</p>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">ساختار تابع (سازنده):</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>sf::ConvexShape(std::size_t pointCount = 0);</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد (مثلث):</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(400, 300), "Triangle Example");
+    
+    // ایجاد یک مثلث
+    sf::ConvexShape triangle;
+    triangle.setPointCount(3); // تعیین 3 نقطه برای مثلث
+    triangle.setPoint(0, sf::Vector2f(100.f, 0.f));   // نقطه بالایی
+    triangle.setPoint(1, sf::Vector2f(0.f, 200.f));   // نقطه پایین چپ
+    triangle.setPoint(2, sf::Vector2f(200.f, 200.f)); // نقطه پایین راست
+    triangle.setFillColor(sf::Color::Yellow);
+    triangle.setPosition(100.f, 50.f);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear();
+        window.draw(triangle);
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">نمونه کد (پنج ضلعی):</h5>
+                            <div class="code-block bg-slate-800 text-slate-200 p-4 rounded-md">
+                                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy ml-1"></i>کپی</button>
+                                <pre><code>#include &lt;SFML/Graphics.hpp&gt;
+#include &lt;cmath&gt; // برای تابع sin و cos
+
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(400, 300), "Pentagon Example");
+    
+    // ایجاد یک پنج ضلعی
+    sf::ConvexShape pentagon;
+    pentagon.setPointCount(5);
+    
+    // محاسبه نقاط پنج ضلعی با استفاده از فرمول‌های دایره
+    float radius = 50.f;
+    for (int i = 0; i < 5; ++i)
+    {
+        float angle = i * 2 * 3.14159f / 5; // زاویه بر حسب رادیان
+        pentagon.setPoint(i, sf::Vector2f(
+            radius * std::cos(angle),
+            radius * std::sin(angle)
+        ));
+    }
+    
+    pentagon.setFillColor(sf::Color::Magenta);
+    pentagon.setPosition(200.f, 150.f);
+
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        window.clear();
+        window.draw(pentagon);
+        window.display();
+    }
+    return 0;
+}</code></pre>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده (مثلث):</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با عنوان "Triangle Example" نمایش داده می‌شود که در آن یک مثلث زرد رنگ با رئوس در نقاط (۱۰۰,۰)، (۰,۲۰۰) و (۲۰۰,۲۰۰) رسم شده است.</p>
+                            <div class="output-simulation">
+                                <div style="width:100px; height:75px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px; position:relative;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">Triangle Example</div>
+                                    <div style="flex-grow:1; background-color:black; position:relative; display:flex; align-items:center; justify-content:center;">
+                                        <div style="width:0; height:0; border-left:15px solid transparent; border-right:15px solid transparent; border-bottom:30px solid yellow;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h5 class="text-lg font-semibold mb-1">خروجی اجرا شده (پنج ضلعی):</h5>
+                            <p class="bg-stone-50 p-3 rounded border border-stone-200">یک پنجره با عنوان "Pentagon Example" نمایش داده می‌شود که در آن یک پنج ضلعی بنفش رنگ با شعاع ۵۰ پیکسل در مرکز پنجره رسم شده است.</p>
+                            <div class="output-simulation">
+                                <div style="width:100px; height:75px; background-color: #333; border:1px solid #555; display:flex; flex-direction:column; border-radius: 5px; position:relative;">
+                                    <div style="background-color: #555; color:white; padding: 2px 5px; font-size:0.7rem; text-align:center; border-top-left-radius: 4px; border-top-right-radius: 4px;">Pentagon Example</div>
+                                    <div style="flex-grow:1; background-color:black; position:relative; display:flex; align-items:center; justify-content:center;">
+                                        <div style="width:25px; height:25px; background-color:magenta; clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <section id="event-management" class="content-section">
+                    <h2 class="text-4xl font-bold text-orange-600 border-b-2 border-orange-500 pb-2">مدیریت رخدادها</h2>
+                    <p class="text-lg">این بخش به زودی تکمیل خواهد شد...</p>
+                </section>
+
+                <section id="time-animation" class="content-section">
+                    <h2 class="text-4xl font-bold text-orange-600 border-b-2 border-orange-500 pb-2">زمان و انیمیشن</h2>
+                    <p class="text-lg">این بخش به زودی تکمیل خواهد شد...</p>
+                </section>
+
+                <section id="text-font" class="content-section">
+                    <h2 class="text-4xl font-bold text-orange-600 border-b-2 border-orange-500 pb-2">متن و فونت</h2>
+                    <p class="text-lg">این بخش به زودی تکمیل خواهد شد...</p>
+                </section>
+
+                <section id="user-input" class="content-section">
+                    <h2 class="text-4xl font-bold text-orange-600 border-b-2 border-orange-500 pb-2">ورودی‌های کاربر</h2>
+                    <p class="text-lg">این بخش به زودی تکمیل خواهد شد...</p>
+                </section>
+
+                <section id="placeholder" class="content-section">
+                    <h2 class="text-3xl font-semibold text-orange-600">به آموزش تعاملی SFML خوش آمدید!</h2>
+                    <p class="mt-4 text-lg">لطفاً برای شروع، یک بخش را از منوی سمت راست انتخاب کنید.</p>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const contentSections = document.querySelectorAll('.content-section');
+        const contentArea = document.getElementById('content-area');
+        const sidebar = document.getElementById('sidebar');
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        let currentSectionId = 'intro'; // Default section
+
+        function setActiveSection(targetId) {
+            contentSections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+            // Update active state for nav buttons
+            navButtons.forEach(btn => {
+                if (btn.dataset.target === targetId) {
+                    btn.classList.add('bg-slate-700', 'text-orange-400');
+                } else {
+                    btn.classList.remove('bg-slate-700', 'text-orange-400');
+                }
+            });
+            currentSectionId = targetId;
+            // On mobile, close sidebar after selection
+            if (window.innerWidth < 768) {
+                sidebar.classList.remove('open');
+                hamburgerBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.target;
+                setActiveSection(targetId);
+            });
+        });
+
+        hamburgerBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            if (sidebar.classList.contains('open')) {
+                hamburgerBtn.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                hamburgerBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        });
+
+        // Close sidebar if clicked outside on mobile
+        document.addEventListener('click', function (event) {
+            if (window.innerWidth < 768 && sidebar.classList.contains('open')) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isClickOnHamburger = hamburgerBtn.contains(event.target);
+                if (!isClickInsideSidebar && !isClickOnHamburger) {
+                    sidebar.classList.remove('open');
+                    hamburgerBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            }
+        });
+
+
+        function copyCode(buttonElement) {
+            const preElement = buttonElement.nextElementSibling; // Assuming <pre> is the next sibling
+            const codeText = preElement.querySelector('code').innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                buttonElement.innerHTML = '<i class="fas fa-check ml-1"></i>کپی شد!';
+                setTimeout(() => {
+                    buttonElement.innerHTML = '<i class="fas fa-copy ml-1"></i>کپی';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                buttonElement.innerText = 'خطا در کپی';
+                setTimeout(() => {
+                    buttonElement.innerHTML = '<i class="fas fa-copy ml-1"></i>کپی';
+                }, 2000);
+            });
+        }
+براغ
+        // Initialize the first section
+        setActiveSection(currentSectionId);
+
+    </script>
+</body>
+</html>

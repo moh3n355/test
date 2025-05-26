@@ -6,25 +6,133 @@
     <title>Zibbook - سالن زیبایی</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .view-all-container {
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .view-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #a475f9, #c4a7ff);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(164, 117, 249, 0.2);
+        }
+
+        .view-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(164, 117, 249, 0.3);
+            background: linear-gradient(45deg, #c4a7ff, #a475f9);
+        }
+
+        .view-all-btn i {
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .view-all-btn:hover i {
+            transform: translateX(-3px);
+        }
+
+        /* استایل مخصوص دکمه مشاهده همه تخفیف‌ها */
+        .discounts .view-all-btn {
+            background: linear-gradient(45deg, #ffffff, #f7d9e3);
+            color: #a475f9;
+            box-shadow: 0 4px 15px rgba(164, 117, 249, 0.1);
+            border: 1px solid rgba(164, 117, 249, 0.1);
+        }
+
+        .discounts .view-all-btn:hover {
+            background: linear-gradient(45deg, #f7d9e3, #ffffff);
+            box-shadow: 0 6px 20px rgba(164, 117, 249, 0.15);
+            border: 1px solid rgba(164, 117, 249, 0.2);
+        }
+
+        .discounts .view-all-btn i {
+            color: #a475f9;
+        }
+
+        /* استایل مخصوص بخش مقالات */
+        #articles .view-all-btn {
+            background: linear-gradient(45deg, #a475f9, #c4a7ff);
+            box-shadow: 0 4px 15px rgba(164, 117, 249, 0.2);
+        }
+
+        #articles .view-all-btn:hover {
+            background: linear-gradient(45deg, #c4a7ff, #a475f9);
+            box-shadow: 0 6px 20px rgba(164, 117, 249, 0.3);
+        }
+
+        /* استایل دکمه درباره ما */
+        .about .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #a475f9, #c4a7ff);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(164, 117, 249, 0.2);
+            border: none;
+            cursor: pointer;
+        }
+
+        .about .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(164, 117, 249, 0.3);
+            background: linear-gradient(45deg, #c4a7ff, #a475f9);
+        }
+    </style>    
 </head>
 <body>
     <!-- Header -->
     <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <img src="/test/aa93ac4c-7a14-4325-bbcc-424d0ee47a33.png" alt="Zibbook Logo">
-                    <div>
-                        <h1>Zibbook</h1>
-                        <span>سالن زیبایی اختصاصی شما</span>
-                    </div>
+        
+            <div class="logo">
+                <img src="/test/aa93ac4c-7a14-4325-bbcc-424d0ee47a33.png" alt="Zibbook Logo">
+                <div>
+                    <h1>Zibbook</h1>
+                    <span>سالن زیبایی اختصاصی شما</span>
                 </div>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="جستجوی خدمات زیبایی...">
+            
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="جستجوی خدمات زیبایی...">
+            </div>
+            <div class="user-panel">
+                <div class="user-icon" onclick="toggleUserMenu()">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-dropdown">
+                    <div class="user-info">
+                        <img src="https://www.aljazeera.com/wp-content/uploads/2021/05/Alizadeh2.jpg?resize=719%2C513&quality=80" alt="تصویر پروفایل">
+                        <div>
+                            <h4>نازنین محمدی</h4>
+                            <p>nazanin@example.com</p>
+                        </div>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><i class="fas fa-user-edit"></i> ویرایش پروفایل</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> نوبت‌های من</a></li>
+                        <li><a href="#"><i class="fas fa-heart"></i> علاقه‌مندی‌ها</a></li>
+                        <li><a href="#"><i class="fas fa-cog"></i> تنظیمات</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#" class="logout"><i class="fas fa-sign-out-alt"></i> خروج از حساب کاربری</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
+
     </header>
     
     <!-- Navigation -->
@@ -32,11 +140,13 @@
         <div class="container">
             <ul class="nav-links">
                 <li><a href="#home">صفحه اصلی</a></li>
+                <li><a href="#top-salons">برترین ها</a></li>
+                <li><a href="#all-salons">همه سالن‌ها</a></li>
                 <li><a href="#services">خدمات</a></li>
-                <li><a href="#projects">پروژه‌ها</a></li>
                 <li><a href="#discounts">تخفیف‌ها</a></li>
                 <li><a href="#articles">مقالات</a></li>
-                <li><a href="#contact">تماس با ما</a></li>
+                <li><a href="#about">تماس با ما</a></li>
+                <li><a href="#about">آشنای با مجموعه</a></li>
             </ul>
         </div>
     </nav>
@@ -45,7 +155,7 @@
     <section id="home" class="hero">
         <div class="hero-content">
             <h2>زیبایی شما، اولویت ماست</h2>
-            <p>با بهترین خدمات زیبایی در Zibbook، زیباترین نسخه خودتان را کشف کنید</p>
+            <p>با بهترین خدمات زیبایی در Zibbook زیباترین نسخه خودتان را کشف کنید</p>
             <a href="#" class="btn">رزرو نوبت</a>
         </div>
     </section>
@@ -53,42 +163,69 @@
     <!-- Services Section -->
     <section id="services" class="container">
         <div class="section-title">
-            <h2>خدمات ما</h2>
+            <h2>خدمات</h2>
         </div>
         
-        <div class="services">
-            <div class="service-card">
+        <div class="salon-slider">
+            <div class="salon-card">
                 <img src="https://www.didehshow.com/wp-content/uploads/2022/12/%DB%8C%DA%A9.jpg" alt="ناخن کاری">
-                <div class="service-content">
+                <div class="salon-content">
                     <h3>ناخن کاری</h3>
                     <p>انواع خدمات ناخن شامل مانیکور، پدیکور، ناخن مصنوعی و طراحی ناخن</p>
                     <a href="#" class="btn">مشاهده جزئیات</a>
                 </div>
             </div>
             
-            <div class="service-card">
+            <div class="salon-card">
                 <img src="https://www.komodaa.com/beauty/wp-content/uploads/sites/2/2020/10/1-63.jpg" alt="مژه">
-                <div class="service-content">
+                <div class="salon-content">
                     <h3>مژه</h3>
                     <p>اکستنشن مژه، لیفت مژه، لمینت مژه و رنگ مژه با بهترین مواد</p>
                     <a href="#" class="btn">مشاهده جزئیات</a>
                 </div>
             </div>
             
-            <div class="service-card">
+            <div class="salon-card">
                 <img src="https://day1.ir/wp-content/uploads/2025/02/Trending-hair-color-of-the-year-3.webp" alt="رنگ مو">
-                <div class="service-content">
+                <div class="salon-content">
                     <h3>رنگ مو</h3>
                     <p>رنگ مو، هایلایت، تچ lights و انواع روش‌های رنگ‌آمیزی تخصصی</p>
                     <a href="#" class="btn">مشاهده جزئیات</a>
                 </div>
             </div>
             
-            <div class="service-card">
+            <div class="salon-card">
                 <img src="https://agahicare.com/wp-content/uploads/2024/12/3-10.webp" alt="میکاپ">
-                <div class="service-content">
+                <div class="salon-content">
                     <h3>میکاپ</h3>
                     <p>میکاپ روز، میکاپ عروس، میکاپ هنری و آموزش تخصصی آرایش</p>
+                    <a href="#" class="btn">مشاهده جزئیات</a>
+                </div>
+            </div>
+
+            <div class="salon-card">
+                <img src="https://www.didehshow.com/wp-content/uploads/2022/12/%DB%8C%DA%A9.jpg" alt="اپیلاسیون">
+                <div class="salon-content">
+                    <h3>اپیلاسیون</h3>
+                    <p>اپیلاسیون حرفه‌ای با بهترین مواد و تکنیک‌های روز دنیا</p>
+                    <a href="#" class="btn">مشاهده جزئیات</a>
+                </div>
+            </div>
+
+            <div class="salon-card">
+                <img src="https://www.komodaa.com/beauty/wp-content/uploads/sites/2/2020/10/1-63.jpg" alt="کراتینه">
+                <div class="salon-content">
+                    <h3>کراتینه</h3>
+                    <p>کراتینه مو، صاف کردن مو و درمان موهای آسیب دیده</p>
+                    <a href="#" class="btn">مشاهده جزئیات</a>
+                </div>
+            </div>
+
+            <div class="salon-card">
+                <img src="https://day1.ir/wp-content/uploads/2025/02/Trending-hair-color-of-the-year-3.webp" alt="کوتاهی مو">
+                <div class="salon-content">
+                    <h3>کوتاهی مو</h3>
+                    <p>کوتاهی و طراحی مو با جدیدترین استایل‌های روز</p>
                     <a href="#" class="btn">مشاهده جزئیات</a>
                 </div>
             </div>
@@ -99,7 +236,7 @@
     <section id="discounts" class="discounts">
         <div class="container">
             <div class="section-title">
-                <h2>تخفیف‌های ویژه</h2>
+                <h2 style="color: white;">تخفیف‌های ویژه</h2>
             </div>
             
             <div class="discount-slider">
@@ -143,11 +280,14 @@
                     </div>
                 </div>
             </div>
+            <div class="view-all-container">
+                <a href="#" class="view-all-btn">مشاهده همه تخفیف‌ها <i class="fas fa-chevron-left"></i></a>
+            </div>
         </div>
     </section>
     
     <!-- Top Salons Section -->
-    <section class="top-salons container">
+    <section id="top-salons" class="top-salons container">
         <div class="section-title">
             <h2>برترین سالن‌ها از نظر کاربران</h2>
         </div>
@@ -166,6 +306,7 @@
                         <span>(124 رای)</span>
                     </div>
                     <p>تخصص در میکاپ عروس و آرایش دائم با بهترین کیفیت</p>
+                    <a href="#" class="btn">مشاهده</a>
                 </div>
             </div>
             
@@ -182,6 +323,7 @@
                         <span>(98 رای)</span>
                     </div>
                     <p>پیشرو در خدمات اکستنشن مژه و کراتینه مو</p>
+                    <a href="#" class="btn">مشاهده</a>
                 </div>
             </div>
             
@@ -198,6 +340,7 @@
                         <span>(156 رای)</span>
                     </div>
                     <p>تخصص در طراحی ناخن و خدمات پدیکور لاک ژل</p>
+                    <a href="#" class="btn">مشاهده</a>
                 </div>
             </div>
             
@@ -214,8 +357,12 @@
                         <span>(87 رای)</span>
                     </div>
                     <p>میکاپ حرفه‌ای و آموزش آرایش با متدهای روز دنیا</p>
+                    <a href="#" class="btn">مشاهده</a>
                 </div>
             </div>
+        </div>
+        <div class="view-all-container">
+            <a href="#" class="view-all-btn">مشاهده همه سالن‌ها <i class="fas fa-chevron-left"></i></a>
         </div>
     </section>
     
@@ -223,12 +370,11 @@
     <section class="testimonials">
         <div class="container">
             <div class="section-title">
-                <h2>نظرات مشتریان</h2>
+                <h2 style="color: white;">نظرات مشتریان</h2>
             </div>
             
-            <div class="testimonial-slider">
-                
-                <div class="testimonial-card">
+            <div class="salon-slider">
+                <div class="salon-card">
                     <div class="testimonial-header">
                         <img src="https://www.aljazeera.com/wp-content/uploads/2021/05/Alizadeh2.jpg?resize=719%2C513&quality=80" alt="نازنین">
                         <div class="testimonial-user">
@@ -241,7 +387,7 @@
                     </p>
                 </div>
                 
-                <div class="testimonial-card">
+                <div class="salon-card">
                     <div class="testimonial-header">
                         <img src="https://gwtoday.gwu.edu/sites/g/files/zaxdzs5401/files/2023-12/nazanin_boniadi.jpg" alt="سارا">
                         <div class="testimonial-user">
@@ -254,7 +400,7 @@
                     </p>
                 </div>
                 
-                <div class="testimonial-card">
+                <div class="salon-card">
                     <div class="testimonial-header">
                         <img src="https://cal.msu.edu/wp-content/uploads/sites/2/sites/62/2020/06/parisaheader-768x653.jpg" alt="مریم">
                         <div class="testimonial-user">
@@ -266,12 +412,98 @@
                         من دو ساله که برای ناخن‌هام به Zibbook میام. همیشه دقیق و تمیز کار می‌کنن. طراحی‌هاشون خیلی خلاقانه‌ست و مواد با کیفیت استفاده می‌کنن. پیشنهاد می‌کنم حتما امتحان کنید.
                     </p>
                 </div>
+
+                <div class="salon-card">
+                    <div class="testimonial-header">
+                        <img src="https://www.aljazeera.com/wp-content/uploads/2021/05/Alizadeh2.jpg?resize=719%2C513&quality=80" alt="لیلا">
+                        <div class="testimonial-user">
+                            <h4>لیلا</h4>
+                            <p>مشتری یک ساله</p>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">
+                        کراتینه موی من رو اینجا انجام دادن و واقعا راضی هستم. موهام نرم و براق شده و بعد از سه ماه هنوز حالت داره. پرسنل خیلی حرفه‌ای و با تجربه هستن.
+                    </p>
+                </div>
+
+                <div class="salon-card">
+                    <div class="testimonial-header">
+                        <img src="https://gwtoday.gwu.edu/sites/g/files/zaxdzs5401/files/2023-12/nazanin_boniadi.jpg" alt="زهرا">
+                        <div class="testimonial-user">
+                            <h4>زهرا</h4>
+                            <p>مشتری سه ساله</p>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">
+                        من برای همه خدمات زیبایی به Zibbook میام. از میکاپ گرفته تا ناخن و مژه. کیفیت کارشون عالیه و قیمت‌ها هم منصفانه است. محیط سالن هم خیلی تمیز و آرامش‌بخشه.
+                    </p>
+                </div>
+
+                <div class="salon-card">
+                    <div class="testimonial-header">
+                        <img src="https://cal.msu.edu/wp-content/uploads/sites/2/sites/62/2020/06/parisaheader-768x653.jpg" alt="فاطمه">
+                        <div class="testimonial-user">
+                            <h4>فاطمه</h4>
+                            <p>مشتری جدید</p>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">
+                        تازه با Zibbook آشنا شدم و از خدمات اپیلاسیونشون استفاده کردم. خیلی دقیق و حرفه‌ای کار کردن. درد کمتری نسبت به جاهای دیگه داشت و نتیجه عالی بود.
+                    </p>
+                </div>
             </div>
         </div>
     </section>
     
+    <section id="articles" class="top-salons container">
+        <div class="section-title">
+            <h2>آخرین مقالات</h2>
+        </div>
+        
+        <div class="salon-slider">
+            <div class="salon-card">
+                <img src="https://afrafile.com/storage/upload/post/1729147537-%D9%84%D9%88%DA%AF%D9%88%D8%B3%D8%A7%D9%84%D9%86%D8%B2%DB%8C%D8%A8%D8%A7%DB%8C%DB%8C%DA%A9%D8%AF1001-02.webp" alt="سالن زیبایی گل سرخ">
+                <div class="salon-content">
+                    <h3>راهنمای جامع مراقبت از ناخن</h3>
+                    <p>نکات کلیدی برای داشتن ناخن‌های سالم و زیبا در تمام فصول سال</p>
+                    <a href="#" class="btn">مشاهده مقاله</a>
+                </div>
+            </div>
+            
+            <div class="salon-card">
+                <img src="https://nbahrami.ir/wp-content/uploads/2021/05/logo-beauty-salon.jpg" alt="سالن زیبایی ماه تابان">
+                <div class="salon-content">
+                    <h3>ترندهای آرایشی سال ۱۴۰۳</h3>
+                    <p>آشنایی با جدیدترین سبک‌های آرایشی و رنگی که در سال جدید مد می‌شوند</p>
+                    <a href="#" class="btn">مشاهده مقاله</a>
+                </div>
+            </div>
+            
+            <div class="salon-card">
+                <img src="https://aidbax.ir/wp-content/uploads/2023/07/beauty_clinic_logo-2048x2048.jpg" alt="سالن زیبایی آفتاب">
+                <div class="salon-content">
+                    <h3>رنگ موهای محبوب فصل بهار</h3>
+                    <p>انتخاب بهترین رنگ مو متناسب با پوست و فصل بهار</p>
+                    <a href="#" class="btn">مشاهده مقاله</a>
+                </div>
+            </div>
+            
+            <div class="salon-card">
+                <img src="https://tarhpro.ir/wp-content/uploads/2024/07/beauty-saloon-logo-1.webp" alt="سالن زیبایی ستاره">
+                <div class="salon-content">
+                    <h3>راهنمای میکاپ عروس</h3>
+                    <p>نکات مهم برای داشتن آرایش عروس ماندگار و طبیعی</p>
+                    <a href="#" class="btn">مشاهده مقاله</a>
+                </div>
+            </div>
+        </div>
+        <div class="view-all-container">
+            <a href="#" class="view-all-btn">مشاهده همه مقالات <i class="fas fa-chevron-left"></i></a>
+        </div>
+    </section>
+
     <!-- About Section -->
-    <section id="articles" class="about container">
+    <section id="about" class="about container">
         <h2>آشنایی با Zibbook</h2>
         <p>
             Zibbook با هدف ارائه بهترین خدمات زیبایی با کیفیت جهانی و قیمت‌های مناسب در سال 1400 تأسیس شد. ما با بهره‌گیری از متخصصان مجرب و استفاده از مواد باکیفیت و استاندارد، تلاش می‌کنیم تا رضایت کامل شما عزیزان را جلب نماییم.
@@ -283,18 +515,12 @@
     </section>
     
     <!-- Footer -->
-    <footer id="contact">
+    <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>درباره Zibbook</h3>
                     <p>سالن زیبایی Zibbook با ارائه خدمات تخصصی زیبایی، همراه شما در زیباتر شدن است.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                    </div>
                 </div>
                 
                 <div class="footer-column">
@@ -304,7 +530,7 @@
                         <li><a href="#services">خدمات</a></li>
                         <li><a href="#discounts">تخفیف‌ها</a></li>
                         <li><a href="#articles">مقالات</a></li>
-                        <li><a href="#contact">تماس با ما</a></li>
+                        <li><a href="#about">تماس با ما</a></li>
                     </ul>
                 </div>
                 
@@ -322,9 +548,16 @@
                 <div class="footer-column">
                     <h3>تماس با ما</h3>
                     <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> تهران، خیابان ولیعصر، پلاک ۱۲۳</li>
-                        <li><i class="fas fa-phone"></i> ۰۲۱-۱۲۳۴۵۶۷۸</li>
+                        <li><i class="fas fa-phone"></i> <a href="tel:02112345678" class="phone-link">۰۲۱-۱۲۳۴۵۶۷۸</a></li>
                         <li><i class="fas fa-envelope"></i> info@zibbook.com</li>
+                        <li class="social-links-container">
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-telegram"></i></a>
+                                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -338,5 +571,19 @@
             </div>
         </div>
     </footer>
+    <script>
+        function toggleUserMenu() {
+            const dropdown = document.querySelector('.user-dropdown');
+            dropdown.classList.toggle('active');
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function closeDropdown(e) {
+                if (!e.target.closest('.user-panel')) {
+                    dropdown.classList.remove('active');
+                    document.removeEventListener('click', closeDropdown);
+                }
+            });
+        }
+    </script>
 </body>
-</html>
+</html>     
