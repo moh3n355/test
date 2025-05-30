@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت سالن‌های زیبایی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(to right, #f7d9e3, #a475f9);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* سایدبار */
+        .sidebar {
+            width: 250px;
+            background-color: rgba(44, 62, 80, 0.9);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .sidebar-header h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-top: 10px;
+        }
+        
+        .sidebar-header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-right: 3px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item.active {
+            background-color: rgba(255, 107, 129, 0.2);
+            border-right: 3px solid #ff6b81;
+        }
+        
+        .menu-item i {
+            margin-left: 10px;
+            font-size: 1.1rem;
+        }
+        
+        /* محتوای اصلی */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            margin: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 8px 15px;
+            border-radius: 30px;
+        }
+        
+        .user-info img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        
+        /* کارت‌های آماری */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card h3 {
+            color: #7f8c8d;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card p {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .card-1 { border-top: 4px solid #ff6b81; }
+        .card-2 { border-top: 4px solid #3498db; }
+        .card-3 { border-top: 4px solid #2ecc71; }
+        .card-4 { border-top: 4px solid #f39c12; }
+        
+        /* جدول */
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .status.approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status.pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        .edit-btn {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .view-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        /* دکمه‌ها */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn i {
+            margin-left: 5px;
+        }
+        
+        .btn-primary {
+            background-color: #ff6b81;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff4757;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(255, 107, 129, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        /* جستجو */
+        .search-box {
+            display: flex;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #ff6b81;
+        }
+        
+        .search-box button {
+            padding: 10px 15px;
+            background-color: #ff6b81;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .search-box button:hover {
+            background-color: #ff4757;
+        }
+        
+        /* تب‌ها */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid #ff6b81;
+            color: #ff6b81;
+            font-weight: 600;
+        }
+        
+        .tab:hover:not(.active) {
+            background-color: #f8f9fa;
+        }
+        
+        /* فرم‌ها */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #ff6b81;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 129, 0.2);
+        }
+        
+        /* کارت‌های کاربران */
+        .user-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .user-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #ff6b81;
+        }
+        
+        .user-card h3 {
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .user-card p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .user-role {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .role-admin {
+            background-color: #ff6b81;
+            color: white;
+        }
+        
+        .role-salon {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .role-user {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        /* تنظیمات */
+        .settings-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .settings-card h3 {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            color: #2c3e50;
+        }
+        
+        /* مخفی کردن بخش‌ها */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- سایدبار -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="/test/aa93ac4c-7a14-4325-bbcc-424d0ee47a33.png" alt="Logo">
+                <h3>سالن‌های زیبایی</h3>
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" onclick="showSection('dashboard')">
+                    <span>داشبورد</span>
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div class="menu-item" onclick="showSection('salons')">
+                    <span>سالن‌های زیبایی</span>
+                    <i class="fas fa-spa"></i>
+                </div>
+                <div class="menu-item" onclick="showSection('users')">
+                    <span>کاربران</span>
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="menu-item" onclick="showSection('settings')">
+                    <span>تنظیمات</span>
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="menu-item">
+                    <span>خروج</span>
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- محتوای اصلی -->
+        <div class="main-content">
+            <!-- هدر -->
+            <div class="header">
+                <h1 id="page-title">داشبورد مدیریت</h1>
+            </div>
+            
+            <!-- بخش داشبورد -->
+            <div id="dashboard" class="content-section active">
+                <!-- کارت‌های آماری -->
+                <div class="stats-cards">
+                    <div class="stat-card card-1">
+                        <h3>تعداد سالن‌ها</h3>
+                        <p>42</p>
+                    </div>
+                    <div class="stat-card card-2">
+                        <h3>کاربران ثبت‌نامی</h3>
+                        <p>156</p>
+                    </div>
+                    <div class="stat-card card-3">
+                        <h3>تایید شده‌ها</h3>
+                        <p>35</p>
+                    </div>
+                    <div class="stat-card card-4">
+                        <h3>بازدید امروز</h3>
+                        <p>128</p>
+                    </div>
+                </div>
+                
+                <!-- آخرین سالن‌های ثبت‌شده -->
+                <div class="table-container">
+                    <h3 style="margin-bottom: 15px;">آخرین سالن‌های ثبت‌شده</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>عملیات</th>
+                                <th>وضعیت</th>
+                                <th>تلفن</th>
+                                <th>صاحب سالن</th>
+                                <th>نام سالن</th>
+                                <th>ردیف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <button class="action-btn view-btn">مشاهده</button>
+                                </td>
+                                <td><span class="status approved">تایید شده</span></td>
+                                <td>09123456789</td>
+                                <td>مریم محمدی</td>
+                                <td>سالن زیبایی گلستان</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="action-btn view-btn">مشاهده</button>
+                                </td>
+                                <td><span class="status pending">در انتظار تایید</span></td>
+                                <td>09129876543</td>
+                                <td>فاطمه حسینی</td>
+                                <td>آرایشگاه دختــرانه</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="action-btn view-btn">مشاهده</button>
+                                </td>
+                                <td><span class="status approved">تایید شده</span></td>
+                                <td>09121112233</td>
+                                <td>زهرا کریمی</td>
+                                <td>سالن مدرن زیبایی</td>
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- بخش سالن‌های زیبایی -->
+            <div id="salons" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>مدیریت سالن‌های زیبایی</h2>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> افزودن سالن جدید
+                    </button>
+                </div>
+                
+                <!-- تب‌ها -->
+                <div class="tabs">
+                    <div class="tab active" onclick="filterSalons('all')">همه سالن‌ها</div>
+                    <div class="tab" onclick="filterSalons('approved')">تایید شده‌ها</div>
+                    <div class="tab" onclick="filterSalons('pending')">در انتظار تایید</div>
+                    <div class="tab" onclick="filterSalons('rejected')">رد شده‌ها</div>
+                </div>
+                
+                <!-- جستجو -->
+                <div class="search-box">
+                    <input type="text" placeholder="جستجو سالن...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                
+                <!-- جدول سالن‌ها -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>عملیات</th>
+                                <th>وضعیت</th>
+                                <th>آدرس</th>
+                                <th>تلفن</th>
+                                <th>صاحب سالن</th>
+                                <th>نام سالن</th>
+                                <th>ردیف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                                <td><span class="status approved">تایید شده</span></td>
+                                <td>تهران، خیابان ولیعصر</td>
+                                <td>09123456789</td>
+                                <td>مریم محمدی</td>
+                                <td>سالن زیبایی گلستان</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                                <td><span class="status pending">در انتظار تایید</span></td>
+                                <td>تهران، خیابان انقلاب</td>
+                                <td>09129876543</td>
+                                <td>فاطمه حسینی</td>
+                                <td>آرایشگاه دختــرانه</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                                <td><span class="status approved">تایید شده</span></td>
+                                <td>تهران، شهرک غرب</td>
+                                <td>09121112233</td>
+                                <td>زهرا کریمی</td>
+                                <td>سالن مدرن زیبایی</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="action-btn edit-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                                </td>
+                                <td><span class="status rejected">رد شده</span></td>
+                                <td>کرج، بلوار موذن</td>
+                                <td>09123334455</td>
+                                <td>نازیلا احمدی</td>
+                                <td>سالن زیبایی الماس</td>
+                                <td>4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- بخش کاربران -->
+            <div id="users" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>مدیریت کاربران</h2>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> افزودن کاربر جدید
+                    </button>
+                </div>
+                
+                <!-- جستجو -->
+                <div class="search-box">
+                    <input type="text" placeholder="جستجو کاربر...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                
+                <!-- کارت‌های کاربران -->
+                <div class="user-cards">
+                    <div class="user-card">
+                        <img src="https://via.placeholder.com/80" alt="User">
+                        <span class="user-role role-admin">مدیر سیستم</span>
+                        <h3>علی محمدی</h3>
+                        <p>ali.mohammadi@example.com</p>
+                        <button class="action-btn edit-btn"><i class="fas fa-edit"></i> ویرایش</button>
+                        <button class="action-btn delete-btn"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                    
+                    <div class="user-card">
+                        <img src="https://via.placeholder.com/80" alt="User">
+                        <span class="user-role role-salon">صاحب سالن</span>
+                        <h3>مریم احمدی</h3>
+                        <p>maryam.ahmadi@example.com</p>
+                        <button class="action-btn edit-btn"><i class="fas fa-edit"></i> ویرایش</button>
+                        <button class="action-btn delete-btn"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                    
+                    <div class="user-card">
+                        <img src="https://via.placeholder.com/80" alt="User">
+                        <span class="user-role role-salon">صاحب سالن</span>
+                        <h3>فاطمه حسینی</h3>
+                        <p>fateme.hosseini@example.com</p>
+                        <button class="action-btn edit-btn"><i class="fas fa-edit"></i> ویرایش</button>
+                        <button class="action-btn delete-btn"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                    
+                    <div class="user-card">
+                        <img src="https://via.placeholder.com/80" alt="User">
+                        <span class="user-role role-user">کاربر عادی</span>
+                        <h3>زهرا کریمی</h3>
+                        <p>zahra.karimi@example.com</p>
+                        <button class="action-btn edit-btn"><i class="fas fa-edit"></i> ویرایش</button>
+                        <button class="action-btn delete-btn"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- بخش تنظیمات -->
+            <div id="settings" class="content-section">
+                
+                <div class="settings-card">
+                    <h3>تنظیمات عمومی</h3>
+                    <div class="form-group">
+                        <label>نام سایت</label>
+                        <input type="text" class="form-control" value="سالن‌های زیبایی">
+                    </div>
+                    <div class="form-group">
+                        <label>لوگو سایت</label>
+                        <input type="file" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات متا</label>
+                        <textarea class="form-control" rows="3">پنل مدیریت سالن‌های زیبایی</textarea>
+                    </div>
+                    <button class="btn btn-primary">ذخیره تغییرات</button>
+                </div>
+                
+                <div class="settings-card">
+                    <h3>تنظیمات تم</h3>
+                    <div class="form-group">
+                        <label>رنگ اصلی</label>
+                        <input type="color" value="#ff6b81">
+                    </div>
+                    <div class="form-group">
+                        <label>رنگ پس‌زمینه</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="color" value="#f7d9e3">
+                            <input type="color" value="#a475f9">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">ذخیره تغییرات</button>
+                </div>
+                
+                <div class="settings-card">
+                    <h3>تنظیمات پیشرفته</h3>
+                    
+                    <div class="form-group">
+                        <label>پشتیبان‌گیری از داده‌ها</label>
+                        <button class="btn btn-secondary">دریافت پشتیبان</button>
+                    </div>
+                    <div class="form-group">
+                        <label>بازنشانی سیستم</label>
+                        <button class="btn btn-secondary" style="background-color: #e74c3c;">بازنشانی تنظیمات</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // نمایش بخش‌های مختلف
+        function showSection(sectionId) {
+            // مخفی کردن همه بخش‌ها
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // غیرفعال کردن همه آیتم‌های منو
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // نمایش بخش انتخاب شده
+            document.getElementById(sectionId).classList.add('active');
+            
+            // فعال کردن آیتم منوی مربوطه
+            event.currentTarget.classList.add('active');
+            
+            // تغییر عنوان صفحه
+            const titles = {
+                'dashboard': 'داشبورد مدیریت',
+                'salons': 'مدیریت سالن‌های زیبایی',
+                'users': 'مدیریت کاربران',
+                'settings': 'تنظیمات سیستم'
+            };
+            document.getElementById('page-title').textContent = titles[sectionId];
+        }
+        
+        // فیلتر سالن‌ها
+        function filterSalons(status) {
+            // غیرفعال کردن همه تب‌ها
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // فعال کردن تب انتخاب شده
+            event.currentTarget.classList.add('active');
+            
+            // در یک پیاده‌سازی واقعی، اینجا درخواست AJAX به سرور ارسال می‌شد
+            console.log('فیلتر سالن‌ها بر اساس وضعیت:', status);
+        }
+    </script>
+</body>
+</html>
